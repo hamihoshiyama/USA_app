@@ -4,3 +4,4 @@ flask-cors
 joblib
 librosa
 numpy
+scikit-learn
