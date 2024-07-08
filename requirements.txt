@@ -5,5 +5,5 @@ joblib>=1.0.0
 librosa>=0.8.0
 numpy==1.21.0
 scikit-learn==1.2.2
-six>=1.15.0
+gunicorn
 
