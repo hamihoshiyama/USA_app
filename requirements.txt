@@ -6,3 +6,4 @@ librosa
 numpy
 gunicorn
 python-dotenv
+soxr
