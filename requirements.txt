@@ -1,9 +1,9 @@
-Flask
-openai
-flask-cors
-joblib
-librosa
-numpy
-gunicorn
+Flask>=2.0.0
+openai>=0.10.0
+flask-cors>=3.0.10
+joblib>=1.0.0
+librosa==0.7.2
+numpy==1.18.5
+scipy==1.4.1
 python-dotenv
-soxr
+gunicorn
