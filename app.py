@@ -66,30 +66,22 @@ def favicon():
 
 @app.route('/process_audio', methods=['POST'])
 def process_audio():
-    file = request.files['file']
-    file_path = 'temp.wav'
-    file.save(file_path)
-    
-    label = classify_audio(file_path)
-    
-    # テスト用の固定テキスト
-    text = "テスト音声データの内容をここに記載"
-    
-    response = generate_response(label, text)
-    
-    return jsonify({'response': response})
-"""
-def send_daily_notification():
-    now = datetime.now()
-    target_time = now.replace(hour=12, minute=0, second=0, microsecond=0)
-    if now > target_time:
-        target_time += timedelta(days=1)
-    delta = (target_time - now).total_seconds()
-    threading.Timer(delta, send_daily_notification).start()
-    print("Sending notification: 今日の気分は?")
-
-send_daily_notification()
-"""
-
+    try:
+        file = request.files['file']
+        file_path = 'temp.wav'
+        file.save(file_path)
+        
+        label = classify_audio(file_path)
+        
+        # テスト用の固定テキスト
+        text = "テスト音声データの内容をここに記載"
+        
+        response = generate_response(label, text)
+        
+        return jsonify({'response': response})
+    except Exception as e:
+        print(f"Error processing audio: {e}")
+        return jsonify({'error': str(e)}), 500
+        
 if __name__ == '__main__':
     app.run(debug=True)
