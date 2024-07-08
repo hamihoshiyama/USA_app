@@ -29,10 +29,14 @@ def extract_features(file_path):
     return features
 
 def classify_audio(file_path):
-    features = extract_features(file_path)
-    labels = model.predict(features)
-    counts = np.bincount(labels)
-    return np.argmax(counts)
+    try:
+        features = extract_features(file_path)
+        labels = model.predict(features)
+        counts = np.bincount(labels)
+        return np.argmax(counts)
+    except Exception as e:
+        print(f"Error classifying audio: {e}")
+        raise e
 
 def generate_response(label, text):
     prompt_map = {
