@@ -40,7 +40,7 @@ def generate_response(label, text):
     }
     prompt = prompt_map[label] + text
     response = openai.chat.completions.create(
-        engine="text-davinci-003",
+        model="gpt-3.5-turbo",
         prompt=prompt,
         max_tokens=150
     )
