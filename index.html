@@ -3,13 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今日の気分</title>
+    <title>今日の気分を教えてください</title>
 </head>
 <body>
-    <h1>今日の気分</h1>
-    <button id="notifyButton">通知を設定する</button>
+    <h1>音声録音</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="audioFile" name="file" accept="audio/*" required>
+        <button type="submit">アップロード</button>
+    </form>
     <p id="response"></p>
 
-    <script src="app.js"></script>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('audioFile');
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/process_audio', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById('response').innerText = result.response;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
 </body>
 </html>
