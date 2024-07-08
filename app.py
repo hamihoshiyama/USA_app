@@ -7,6 +7,8 @@ import numpy as np
 import os
 from dotenv import load_dotenv
 
+import numpy.core.multiarray
+
 app = Flask(__name__)
 CORS(app)
 
