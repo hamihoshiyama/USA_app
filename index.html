@@ -3,23 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今日の気分を教えてください</title>
+    <title>音声処理</title>
 </head>
 <body>
-    <h1>音声録音</h1>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" id="audioFile" name="file" accept="audio/*" required>
-        <button type="submit">アップロード</button>
-    </form>
+    <h1>音声処理</h1>
+    <button id="recordButton">録音開始</button>
+    <button id="stopButton" disabled>録音停止</button>
+    <button id="uploadButton" disabled>アップロード</button>
     <p id="response"></p>
 
     <script>
-        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        let mediaRecorder;
+        let audioChunks = [];
 
+        document.getElementById('recordButton').addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.addEventListener('dataavailable', event => {
+                audioChunks.push(event.data);
+            });
+
+            mediaRecorder.addEventListener('stop', () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+
+                document.getElementById('uploadButton').disabled = false;
+            });
+
+            mediaRecorder.start();
+            document.getElementById('recordButton').disabled = true;
+            document.getElementById('stopButton').disabled = false;
+        });
+
+        document.getElementById('stopButton').addEventListener('click', () => {
+            mediaRecorder.stop();
+            document.getElementById('recordButton').disabled = false;
+            document.getElementById('stopButton').disabled = true;
+        });
+
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
             const formData = new FormData();
-            const fileInput = document.getElementById('audioFile');
-            formData.append('file', fileInput.files[0]);
+            formData.append('file', audioBlob, 'recording.wav');
 
             try {
                 const response = await fetch('/process_audio', {
@@ -29,7 +57,7 @@
                 const result = await response.json();
                 document.getElementById('response').innerText = result.response;
             } catch (error) {
-                console.error('Error:', error);
+                console.error('エラー:', error);
             }
         });
     </script>
