@@ -5,11 +5,13 @@ import joblib
 import librosa
 import numpy as np
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
 
 # OpenAI APIキーの設定
+load_dotenv()
 openai.api_key = os.getenv("OPEN_API_KEY")
 
 # 学習済み分類器モデルの読み込み
@@ -41,10 +43,13 @@ def generate_response(label, text):
     prompt = prompt_map[label] + text
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
-        prompt=prompt,
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ],
         max_tokens=150
     )
-    return response.choices[0].text.strip()
+    return response.choices[0].message.content.strip()
 
 @app.route('/process_audio', methods=['POST'])
 def process_audio():
