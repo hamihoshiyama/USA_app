@@ -1,7 +1,8 @@
-Flask
-openai
-flask-cors
-joblib
-librosa
-numpy
+Flask>=2.0.0
+openai>=0.10.0
+flask-cors>=3.0.10
+joblib>=1.0.0
+librosa>=0.8.0
+numpy==1.21.6
 scikit-learn==1.2.2
+
