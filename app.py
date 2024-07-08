@@ -50,6 +50,13 @@ def generate_response(label, text):
         max_tokens=150
     )
     return response.choices[0].message.content.strip()
+@app.route('/')
+def home():
+    return send_from_directory('', 'index.html')
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
 
 @app.route('/process_audio', methods=['POST'])
 def process_audio():
