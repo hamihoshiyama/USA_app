@@ -1,0 +1,8 @@
+librosa
+openai
+scikit-learn
+numpy<2.0.0
+flask
+joblib
+python-dotenv
+openai-whisper
